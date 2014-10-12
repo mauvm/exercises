@@ -40,14 +40,19 @@ func TestTileValues(t *testing.T) {
 }
 
 func TestTileRotating(t *testing.T) {
-	tile := Tile{862, 0} // CYMk
+	tile, _ := TileFromString("CYMk")
+
+	assert.Equal(t, "N", TileDirection(tile))
 
 	tile.Rotate(1) // 1 step clockwise
 	assert.Equal(t, "kCYM", tile.ToString())
+	assert.Equal(t, "E", TileDirection(tile))
 
 	tile.Rotate(-2) // 2 steps counter clockwise
 	assert.Equal(t, "YMkC", tile.ToString())
+	assert.Equal(t, "W", TileDirection(tile))
 
 	tile.Rotate(7) // 7 % 4 = 3 steps clockwise
 	assert.Equal(t, "MkCY", tile.ToString())
+	assert.Equal(t, "S", TileDirection(tile))
 }

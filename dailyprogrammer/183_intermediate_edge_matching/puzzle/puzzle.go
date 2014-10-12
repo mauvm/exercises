@@ -12,7 +12,7 @@ var TileValues = []uint8{99, 67, 109, 77, 121, 89, 107, 75}
 
 type Tile struct {
 	val uint16
-	orientation uint8
+	dir uint8
 }
 
 func (t *Tile) Rotate(steps int) {
@@ -32,6 +32,8 @@ func (t *Tile) Rotate(steps int) {
 	val := t.val
 	t.val = (val & 4095) >> uint8(steps * 3)
 	t.val |= ((1 << uint8(steps * 3) - 1) & val) << uint8((4 - steps) * 3)
+
+	t.dir = (t.dir + uint8(steps)) % 4
 }
 
 func (t Tile) ToString() string {
@@ -78,6 +80,16 @@ func RuneToTileValue(r rune) (val uint8, err error) {
 		}
 	}
 	return 0, errors.New("No value for rune");
+}
+
+func TileDirection(t Tile) string {
+	switch t.dir {
+		case 0: return "N"
+		case 1: return "E"
+		case 2: return "S"
+		case 3: return "W"
+	}
+	return "N"
 }
 
 type Board []Tile
