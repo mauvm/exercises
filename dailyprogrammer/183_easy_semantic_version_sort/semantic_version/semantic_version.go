@@ -1,24 +1,7 @@
-// Assignment: http://www.reddit.com/r/dailyprogrammer/comments/2igfj9/10062014_challenge_183_easy_semantic_version_sort/
-
-// Learned about:
-// - Unit testing
-// - Structures
-// - Slices and manipulation
-// - Sort interface
-// - Regular expressions
-// - File reading
-// - Ranges
-// - String manipulation
-// - Sorting
-
-package main
+package semantic_version
 
 import "strconv"
 import "regexp"
-import "strings"
-import "io/ioutil"
-import "sort"
-import "fmt"
 
 type SemanticVersion struct {
 	major, minor, patch int
@@ -62,7 +45,7 @@ func (slice SemanticVersions) Less(i, j int) bool {
 	if len(v1.metadata) > 0 || len(v2.metadata) > 0 {
 		return v1.metadata > v2.metadata
 	}
-	return true // Equal
+	return false // Equal
 }
 
 func (slice SemanticVersions) Swap(i, j int) {
@@ -86,58 +69,4 @@ func SemanticVersionFromString(input string) SemanticVersion {
 	}
 
 	return version
-}
-
-func checkError(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func readFile(file string) string {
-	data, err := ioutil.ReadFile(file)
-	checkError(err)
-	return string(data)
-}
-
-func ReadVersionFile(file string) []string {
-	data := readFile(file)
-	lines := strings.Split(data, "\n")
-	if len(lines) == 0 {
-		return []string{}
-	}
-	amount, _ := strconv.Atoi(lines[0])
-	if len(lines) < amount + 1 {
-		return lines[1:]
-	}
-	return lines[1:amount+1]
-}
-
-func LinesToVersions(lines []string) SemanticVersions {
-	versions := SemanticVersions{}
-	for _, line := range lines {
-		version := SemanticVersionFromString(line)
-		versions = append(versions, version)
-	}
-	return versions
-}
-
-func SortVersions(versions SemanticVersions) string {
-	result := ""
-	if len(versions) == 0 {
-		return result
-	}
-	sort.Sort(versions)
-	for _, version := range versions {
-		result += version.ToString() + "\n"
-	}
-	result = result[:len(result)-1] // Remove trailing newline
-	return result
-}
-
-func main() {
-	lines := ReadVersionFile("fixtures/input_1.txt")
-	versions := LinesToVersions(lines)
-	output := SortVersions(versions)
-	fmt.Print(output)
 }

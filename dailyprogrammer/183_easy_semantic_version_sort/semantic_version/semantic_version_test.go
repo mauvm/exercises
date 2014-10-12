@@ -1,4 +1,4 @@
-package main
+package semantic_version
 
 import "testing"
 import "github.com/stretchr/testify/assert"
@@ -22,12 +22,4 @@ func TestSemanticVersionFromString(t *testing.T) {
 	assert.Equal(t, v.patch, 11)
 	assert.Equal(t, v.label, "")
 	assert.Equal(t, v.metadata, "20111111")
-}
-
-func TestVetsionSort(t *testing.T) {
-	lines := ReadVersionFile("fixtures/input_1.txt")
-	versions := LinesToVersions(lines)
-	output := SortVersions(versions)
-	expectedOutput := readFile("fixtures/output_1.txt")
-	assert.Equal(t, output, expectedOutput)
 }
