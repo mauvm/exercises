@@ -3,6 +3,8 @@ package puzzle
 import "testing"
 import "github.com/stretchr/testify/assert"
 
+// import "fmt"
+
 func TestTileCreation(t *testing.T) {
 	var err error
 
@@ -55,4 +57,48 @@ func TestTileRotating(t *testing.T) {
 	tile.Rotate(7) // 7 % 4 = 3 steps clockwise
 	assert.Equal(t, "MkCY", tile.ToString())
 	assert.Equal(t, "S", TileDirection(tile))
+}
+
+func TestBoardCreation(t *testing.T) {
+	board := CreateBoard(3)
+
+	assert.Equal(t, 3, board.size)
+	assert.Equal(t, 9, len(board.tiles))
+}
+
+func TestBoardTiles(t *testing.T) {
+	board := CreateBoard(3)
+
+	var original Tile
+	var p_original, p_tile, p_tile_nil *Tile
+	var err error
+
+	// Placing and retrieving tile
+	original, _ = TileFromString("CYMk")
+	p_original = &original
+	err = board.Place(p_original, 4)
+	assert.Equal(t, nil, err)
+	p_tile, err = board.GetTile(4)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, p_original, p_tile)
+
+	// Yk not possible
+	err = board.Place(p_original, 5)
+	assert.NotEqual(t, nil, err)
+
+	// Not found
+	p_tile, err = board.GetTile(8)
+	assert.NotEqual(t, nil, err)
+	assert.Equal(t, p_tile_nil, p_tile)
+
+	// Out of range
+	p_tile, err = board.GetTile(100)
+	assert.NotEqual(t, nil, err)
+	assert.Equal(t, p_tile_nil, p_tile)
+}
+
+func TestBoardIsSolved(t *testing.T) {
+	board := CreateBoard(3)
+
+	assert.Equal(t, false, board.IsSolved())
 }

@@ -92,16 +92,72 @@ func TileDirection(t Tile) string {
 	return "N"
 }
 
-type Board []Tile
+type Board struct {
+	size uint8
+	tiles []*Tile
+}
 
 func CreateBoard(size uint8) Board {
-	return Board{}
+	return Board{size, make([]*Tile, size * size)}
 }
 
-func (b Board) CanPlace(t Tile, pos uint8) bool {
-	return true // TODO
+func (b Board) GetTile(pos uint8) (t *Tile, err error) {
+	if pos >= b.size * b.size {
+		return nil, errors.New("Given position is out of range")
+	}
+	if b.tiles[pos] == nil {
+		return nil, errors.New("No tile placed on given position")
+	}
+	return b.tiles[pos], nil
 }
 
-func (b Board) Place(t Tile, pos uint8) (err error) {
-	return nil // TODO
+func (b Board) IsSolved() bool {
+	var i uint8
+	for i = 0; i < b.size; i += 1 {
+		if b.tiles[i] == nil || ! b.CanPlace(b.tiles[i], i) {
+			return false
+		}
+	}
+	return true
+}
+
+func (b Board) CanPlace(t *Tile, pos uint8) bool {
+	if pos >= b.size * b.size {
+		return false
+	}
+	// var p_t *Tile
+	var err error
+	// Test north
+	if pos >= b.size {
+		if _, err = b.GetTile(pos - b.size); err == nil {
+			return false
+		}
+	}
+	// Test east
+	if pos + 1 % b.size == 0 {
+		if _, err = b.GetTile(pos + 1); err == nil {
+			return false
+		}
+	}
+	// Test south
+	if pos < b.size * b.size - b.size {
+		if _, err = b.GetTile(pos + b.size); err == nil {
+			return false
+		}
+	}
+	// Test west
+	if pos % b.size > 0 {
+		if _, err = b.GetTile(pos - 1); err == nil {
+			return false
+		}
+	}
+	return true
+}
+
+func (b Board) Place(t *Tile, pos uint8) (err error) {
+	if ! b.CanPlace(t, pos) {
+		return errors.New("Can not place tile here")
+	}
+	b.tiles[pos] = t
+	return nil
 }

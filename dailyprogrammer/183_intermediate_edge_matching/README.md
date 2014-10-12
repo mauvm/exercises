@@ -10,3 +10,4 @@ Learned about:
 - Function return values (multiple, references)
 - Idiomatic error handling
 - Modulo operator
+- Pointers
