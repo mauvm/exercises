@@ -121,34 +121,46 @@ func (b Board) IsSolved() bool {
 	return true
 }
 
+func testForAlignedPair(t1 *Tile, t2 *Tile, dir uint8) bool {
+	val1 := TileValue(*t1, dir)
+	val2 := TileValue(*t2, (dir + 2) % 4)
+	if val1 % 2 == 0 {
+		// Compare tail to head
+		return val1 + 1 == val2
+	} else {
+		// Compare head to tail
+		return val1 - 1 == val2
+	}
+}
+
 func (b Board) CanPlace(t *Tile, pos uint8) bool {
 	if pos >= b.size * b.size {
 		return false
 	}
-	// var p_t *Tile
+	var p_t *Tile
 	var err error
 	// Test north
 	if pos >= b.size {
-		if _, err = b.GetTile(pos - b.size); err == nil {
-			return false
+		if p_t, err = b.GetTile(pos - b.size); err == nil {
+			return testForAlignedPair(t, p_t, 0)
 		}
 	}
 	// Test east
 	if pos + 1 % b.size == 0 {
-		if _, err = b.GetTile(pos + 1); err == nil {
-			return false
+		if p_t, err = b.GetTile(pos + 1); err == nil {
+			return testForAlignedPair(t, p_t, 1)
 		}
 	}
 	// Test south
 	if pos < b.size * b.size - b.size {
-		if _, err = b.GetTile(pos + b.size); err == nil {
-			return false
+		if p_t, err = b.GetTile(pos + b.size); err == nil {
+			return testForAlignedPair(t, p_t, 2)
 		}
 	}
 	// Test west
 	if pos % b.size > 0 {
-		if _, err = b.GetTile(pos - 1); err == nil {
-			return false
+		if p_t, err = b.GetTile(pos - 1); err == nil {
+			return testForAlignedPair(t, p_t, 3)
 		}
 	}
 	return true

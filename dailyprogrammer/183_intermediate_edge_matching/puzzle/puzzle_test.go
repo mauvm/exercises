@@ -3,8 +3,6 @@ package puzzle
 import "testing"
 import "github.com/stretchr/testify/assert"
 
-// import "fmt"
-
 func TestTileCreation(t *testing.T) {
 	var err error
 
@@ -22,9 +20,8 @@ func TestTileCreation(t *testing.T) {
 }
 
 func TestRuneToTileValue(t *testing.T) {
-	runes := []rune{'c', 'C', 'm', 'M', 'y', 'Y', 'k', 'K'}
-	for p, r := range runes {
-		val, _ := RuneToTileValue(r)
+	for p, v := range TileValues {
+		val, _ := RuneToTileValue(rune(v))
 		assert.Equal(t, p, val)
 	}
 }
@@ -32,11 +29,9 @@ func TestRuneToTileValue(t *testing.T) {
 func TestTileValues(t *testing.T) {
 	tile, _ := TileFromString("KcyM")
 	runes := []rune{'K', 'c', 'y', 'M'}
-	values := []uint8{7, 0, 4, 3}
 
 	for p, r := range runes {
 		val := TileValue(tile, uint8(p))
-		assert.Equal(t, values[p], val)
 		assert.Equal(t, r, TileValueToRune(val))
 	}
 }
@@ -74,7 +69,7 @@ func TestBoardTiles(t *testing.T) {
 	var err error
 
 	// Placing and retrieving tile
-	original, _ = TileFromString("CYMk")
+	original, _ = TileFromString("CYck")
 	p_original = &original
 	err = board.Place(p_original, 4)
 	assert.Equal(t, nil, err)
@@ -82,9 +77,13 @@ func TestBoardTiles(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.Equal(t, p_original, p_tile)
 
-	// Yk not possible
+	// Yk is not possible
 	err = board.Place(p_original, 5)
 	assert.NotEqual(t, nil, err)
+
+	// cC is possible
+	err = board.Place(p_original, 1)
+	assert.Equal(t, nil, err)
 
 	// Not found
 	p_tile, err = board.GetTile(8)
@@ -97,8 +96,27 @@ func TestBoardTiles(t *testing.T) {
 	assert.Equal(t, p_tile_nil, p_tile)
 }
 
-func TestBoardIsSolved(t *testing.T) {
+func TestBoardIsNotSolved(t *testing.T) {
 	board := CreateBoard(3)
 
 	assert.Equal(t, false, board.IsSolved())
+
+	tile, _ := TileFromString("CYck")
+	board.Place(&tile, 4)
+
+	assert.Equal(t, false, board.IsSolved())
+}
+
+func TestBoardIsSolved(t *testing.T) {
+	board := CreateBoard(3)
+	tiles := []string{"CYMk", "McKy", "YMKC", "mCmK", "kyMc", "kYcY", "MKyC", "mYCk", "CMky"}
+
+	for i := 0; i < len(tiles); i += 1 {
+		tile, err := TileFromString(tiles[i])
+		assert.Equal(t, nil, err)
+		err = board.Place(&tile, uint8(i))
+		assert.Equal(t, nil, err)
+	}
+
+	assert.Equal(t, true, board.IsSolved())
 }
