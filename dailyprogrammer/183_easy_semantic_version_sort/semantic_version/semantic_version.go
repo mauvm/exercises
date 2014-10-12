@@ -23,6 +23,9 @@ func (v SemanticVersion) ToString() string {
 
 type SemanticVersions []SemanticVersion
 
+// Implement sortInterface
+// Source: http://nerdyworm.com/blog/2013/05/15/sorting-a-slice-of-structs-in-go/
+
 func (slice SemanticVersions) Len() int {
 	return len(slice)
 }

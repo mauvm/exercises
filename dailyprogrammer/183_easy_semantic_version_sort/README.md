@@ -6,6 +6,7 @@ Language: Go
 
 Learned about:
 
+- Code structuring and imports
 - Unit testing
 - Structures
 - Slices and manipulation
