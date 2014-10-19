@@ -11,3 +11,6 @@ Learned about:
 - Idiomatic error handling
 - Modulo operator
 - Pointers
+- Channels
+- Go routines
+- Debugging

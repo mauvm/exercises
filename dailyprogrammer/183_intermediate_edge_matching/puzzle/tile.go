@@ -65,7 +65,7 @@ func (t Tile) GetDirection() string {
 	return "N"
 }
 
-func (t Tile) ToString() string {
+func (t Tile) String() string {
 	val := string(TileValueToRune(t.Value(0)))
 	val += string(TileValueToRune(t.Value(1)))
 	val += string(TileValueToRune(t.Value(2)))

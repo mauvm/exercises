@@ -1,5 +1,6 @@
 package puzzle
 
+import "fmt"
 import "errors"
 
 type Board struct {
@@ -9,6 +10,14 @@ type Board struct {
 
 func CreateBoard(size uint8) Board {
 	return Board{size, make([]*Tile, size * size)}
+}
+
+func (b Board) GetSize() uint8 {
+	return b.size
+}
+
+func (b Board) GetTiles() []*Tile {
+	return b.tiles
 }
 
 func (b Board) GetTile(pos uint8) (t *Tile, err error) {
@@ -78,8 +87,20 @@ func (b Board) CanPlace(t *Tile, pos uint8) bool {
 
 func (b Board) Place(t *Tile, pos uint8) (err error) {
 	if ! b.CanPlace(t, pos) {
-		return errors.New("Can not place tile here")
+		message := fmt.Sprintf("Can not place tile %v on position %d", *t, pos)
+		return errors.New(message)
 	}
 	b.tiles[pos] = t
 	return nil
+}
+
+func (b Board) String() (result string) {
+	for _, tile := range b.GetTiles() {
+		if tile == nil {
+			result += "<nil> "
+		} else {
+			result += (*tile).String() + " "
+		}
+	}
+	return result
 }

@@ -7,13 +7,13 @@ func TestTileCreation(t *testing.T) {
 	var err error
 
 	tile := CreateTile(862, 0)
-	assert.Equal(t, tile.ToString(), "CYMk")
+	assert.Equal(t, "CYMk", tile.String())
 
 	tile, err = TileFromString("cYkY")
-	assert.Equal(t, "cYkY", tile.ToString())
+	assert.Equal(t, "cYkY", tile.String())
 
 	tile, err = TileFromString("yKMc")
-	assert.Equal(t, "yKMc", tile.ToString())
+	assert.Equal(t, "yKMc", tile.String())
 
 	tile, err = TileFromString("AAAA")
 	assert.NotEqual(t, nil, err)
@@ -50,18 +50,23 @@ func TestTileRotating(t *testing.T) {
 	assert.Equal(t, 0, tile.GetRotation())
 	assert.Equal(t, "N", tile.GetDirection())
 
+	tile.Rotate(0) // No rotation
+	assert.Equal(t, "CYMk", tile.String())
+	assert.Equal(t, 0, tile.GetRotation())
+	assert.Equal(t, "N", tile.GetDirection())
+
 	tile.Rotate(1) // 1 step clockwise
-	assert.Equal(t, "kCYM", tile.ToString())
+	assert.Equal(t, "kCYM", tile.String())
 	assert.Equal(t, 1, tile.GetRotation())
 	assert.Equal(t, "E", tile.GetDirection())
 
 	tile.Rotate(-2) // 2 steps counter clockwise
-	assert.Equal(t, "YMkC", tile.ToString())
+	assert.Equal(t, "YMkC", tile.String())
 	assert.Equal(t, 3, tile.GetRotation())
 	assert.Equal(t, "W", tile.GetDirection())
 
 	tile.Rotate(7) // 7 % 4 = 3 steps clockwise
-	assert.Equal(t, "MkCY", tile.ToString())
+	assert.Equal(t, "MkCY", tile.String())
 	assert.Equal(t, 2, tile.GetRotation())
 	assert.Equal(t, "S", tile.GetDirection())
 }
