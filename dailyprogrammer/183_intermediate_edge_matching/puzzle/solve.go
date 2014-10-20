@@ -3,6 +3,17 @@ package puzzle
 import "errors"
 import "strings"
 
+func LinesToTiles(lines []string) (tiles []Tile, err error) {
+	for _, line := range lines {
+		tile, err := TileFromString(line)
+		if err != nil {
+			return tiles, err
+		}
+		tiles = append(tiles, tile)
+	}
+	return tiles, err
+}
+
 func copyBoard(size uint8, board Board) Board {
 	boardCopy := CreateBoard(size)
 	copyTiles := boardCopy.GetTiles()
@@ -77,14 +88,14 @@ func BoardToSolution(board Board, tiles []Tile) (solution string, err error) {
 	}
 
 	solutions := make([]string, board.GetSize() * board.GetSize())
-	for _, p_tile := range board.GetTiles() {
+	for i, p_tile := range board.GetTiles() {
 		tile := *p_tile
 		dir := tile.GetDirection()
 		tile.Rotate(int(4 - tile.GetRotation())) // Reset to N
 		val := uint16(tile)
-		for i, availableTile := range tiles {
+		for j, availableTile := range tiles {
 			if uint16(availableTile) == val {
-				solutions[i] = string(rune(65 + i)) + dir
+				solutions[i] = string(rune(65 + j)) + dir
 				break
 			}
 		}

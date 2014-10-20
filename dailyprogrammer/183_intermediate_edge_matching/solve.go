@@ -18,7 +18,7 @@ func readFile(file string) string {
 	return string(data)
 }
 
-func ReadInputFile(file string) (uint8, []string) {
+func readInputFile(file string) (uint8, []string) {
 	data := readFile(file)
 	lines := strings.Split(data, "\n")
 	if len(lines) == 0 {
@@ -28,19 +28,10 @@ func ReadInputFile(file string) (uint8, []string) {
 	return uint8(amount), lines[1:]
 }
 
-func LinesToTiles(lines []string) []puzzle.Tile {
-	tiles := []puzzle.Tile{}
-	for _, line := range lines {
-		tile, err := puzzle.TileFromString(line)
-		checkError(err)
-		tiles = append(tiles, tile)
-	}
-	return tiles
-}
-
 func main() {
-	size, lines := ReadInputFile("fixtures/input_1.txt")
-	tiles := LinesToTiles(lines)
+	size, lines := readInputFile("fixtures/input_1.txt")
+	tiles, err := puzzle.LinesToTiles(lines)
+	checkError(err)
 	solution, err := puzzle.FirstSolution(size, tiles)
 	checkError(err)
 	fmt.Println(solution)
