@@ -61,25 +61,33 @@ func (b Board) CanPlace(t *Tile, pos uint8) bool {
 	// Test north
 	if pos >= b.size {
 		if p_t, err = b.GetTile(pos - b.size); err == nil {
-			return testForAlignedPair(t, p_t, 0)
+			if ! testForAlignedPair(t, p_t, 0) {
+				return false
+			}
 		}
 	}
 	// Test east
 	if pos + 1 % b.size == 0 {
 		if p_t, err = b.GetTile(pos + 1); err == nil {
-			return testForAlignedPair(t, p_t, 1)
+			if ! testForAlignedPair(t, p_t, 1) {
+				return false
+			}
 		}
 	}
 	// Test south
 	if pos < b.size * b.size - b.size {
 		if p_t, err = b.GetTile(pos + b.size); err == nil {
-			return testForAlignedPair(t, p_t, 2)
+			if ! testForAlignedPair(t, p_t, 2) {
+				return false
+			}
 		}
 	}
 	// Test west
 	if pos % b.size > 0 {
 		if p_t, err = b.GetTile(pos - 1); err == nil {
-			return testForAlignedPair(t, p_t, 3)
+			if ! testForAlignedPair(t, p_t, 3) {
+				return false
+			}
 		}
 	}
 	return true
